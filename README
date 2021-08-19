@@ -1,0 +1,13 @@
+1. soruda Docker compose kulanarak Elasticsearch, Kibana uygulamalarını çalıştırmamız istenmekte.
+
+Öncelikle çalıştığım dizine elastichsearch dizini ekleyip altında bir elasticsearch.yml dosyası açtım. Gerekli düzenlemeleri yaptım
+Sonra kibana.yml isimli dosyayı açıp oluşturacağım Stack’de sunucunun adını hostunu ve Kibana’nın Elasticsearch’e ulaşması için urlyi yazdım.
+Sonra sonra logstash için de logtash.conf adlı bir konfigurasyon dosyası oluşturdum. Bu dosya içine Logstash’in iletişim kuracağı tcp portu ve üzerinde arama yapacağı search-engine’i output ifadesine url olarak ekledim.
+
+Hazırladığım docker-compose.yml dosyası elasticsearch, logstash ve kibana olmak üzere üç servisten oluşmakta.
+İlk çalışacak servisimiz elasticsearch olacağından kibana ve logstash servislerinin altına depend_on ifadesiyle elasticsearch’ü yazdım böylelikle elasticsearch servisi başlamadan diğer servisler başlamayacak.
+Her servis için oluşturduğum konfigurasyon dosyalarını docker volume olarak servisler ile bağladım. Kullanılacak olan portları sunmak için ise elasticsearch için 9200 ve 9300 portlarını host tarafında aynı olacak şekilde düzenledim.
+9200 portu başka bir dil ile RESTful api üzerinden iletişim kurabilmek için 9300 portu ise cluster içindeki node’lar arasında iletişim kurmak için gerekli. 
+Logstash ve Kibana için 5000 ve 5061 portlarını dışarı sunduktan sonra docker-compose.yml dosyası hazır hale gelmiş oldu. docker-compose up -d dedikten sonra docker ps komutunu vererek servislerin hepsinin ayağa kalktığını ve doğru portlara bağlandığını gördüm.http://23.88.46.234:5601 adresiyle kibanaya ulaştım.
+
+
